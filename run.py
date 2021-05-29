@@ -22,6 +22,7 @@ import time
 import os
 np.set_printoptions(suppress=True)
 from config_lake import *
+import pdb
 #from config_car import *
 
 def main(env_name, headless):
@@ -47,7 +48,8 @@ def main(env_name, headless):
     #### Called pi_old because this will be the policy we use to gather data
     policy_old = None
     old_policy_path = os.path.join(model_dir, old_policy_name)
-    
+    print("old_policy_path") # <--- set in config_lake.py
+    # pdb.set_trace()
     if env_name == 'lake':
         policy_old = LakeDQN(env, 
                              gamma, 
@@ -92,8 +94,6 @@ def main(env_name, headless):
                             models_path = os.path.join(model_dir,'weights.{epoch:02d}-{loss:.2f}.hdf5'),
                             )
 
-
-
     else:
         raise
     
@@ -130,7 +130,8 @@ def main(env_name, headless):
                                                        position_of_goals=position_of_goals, 
                                                        position_of_holes=position_of_holes,
                                                        num_frame_stack=num_frame_stack)
-        
+        print("Environment Best Response Algorithm")
+        pdb.set_trace()
         fitted_off_policy_evaluation_algorithm = LakeFittedQEvaluation(initial_states, 
                                                            state_space_dim + action_space_dim, 
                                                            [map_size, map_size], 
@@ -320,7 +321,7 @@ def main(env_name, headless):
 
             lambda_t = lambdas[-1]
             pi_t, values = problem.best_response(lambda_t, desc='FQI pi_{0}_{1}'.format(iteration, i), exact=exact_policy_algorithm)
-
+            pdb.set_trace()
             policies.append(pi_t) # Updating policies
             problem.update(pi_t, values, iteration) #Evaluate C(pi_t), G(pi_t) and save
 

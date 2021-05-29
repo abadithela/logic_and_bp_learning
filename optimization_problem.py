@@ -26,7 +26,7 @@ class Program(object):
 
         self.dataset = Dataset(num_frame_stack, pic_size, (len(constraints) + 1,) )
         self.constraints = constraints
-        self.C = ValueFunction()
+        self.C = ValueFunction() #. How are these different from the exact version?
         self.G = ValueFunction()
         self.C_exact = ValueFunction()
         self.G_exact = ValueFunction()
