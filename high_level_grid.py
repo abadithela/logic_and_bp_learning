@@ -30,13 +30,21 @@ class MCTS_Lake(ExtendedFrozenLake):
     def reward():
 
     def is_terminal():
-
+        if self.is_constraint1_violated() and self.is_constraint2_violated():
+            return True
+        elif self.s == self.goal_pos:
+            return True
+        elif self.s == self.hole_pos:
+            return True
+        else: 
+            return False
+            
     def is_constraint1_violated():
         if self.g1 > 0:
             return True
         else
             return False
-            
+
     def is_constraint2_violated():
         if self.g2 > 0:
             return True
