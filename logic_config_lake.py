@@ -31,7 +31,7 @@ initial_states = [[0]] #The only initial state is [1,0...,0]. In general, this s
 non_terminal_states = np.nonzero(np.reshape(((env.desc == 'S') + (env.desc == 'F')), -1))[0] # Used for dynamic programming. this is an optimization to make the algorithm run faster. In general, you may not have this
 max_number_of_main_algo_iterations = 100 # After how many iterations to cut off the main algorithm
 model_type = 'mlp'
-old_policy_name = 'pi_old_map_size_{0}_{1}.h5'.format(map_size, model_type)
+old_policy_name = 'pi_old_map_size_{0}_{1}.h5'.format(map_size, HL_model_type)
 constraints = [.1, 0]
 starting_lambda = 'uniform'
 
