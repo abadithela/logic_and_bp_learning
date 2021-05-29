@@ -1,9 +1,12 @@
 
 
+from __future__ import absolute_import
+from __future__ import print_function
 import numpy as np
 import scipy.signal as signal
 from replay_buffer import Buffer
 import os
+from six.moves import range
 
 
 class ExactPolicyEvaluator(object):
@@ -44,7 +47,7 @@ class ExactPolicyEvaluator(object):
         else:
             policy_is_greedy= kw['policy_is_greedy']
         
-        if not isinstance(policy,list):
+        if not isinstance(policy,(list,)):
             policy = [policy]
 
 
@@ -57,7 +60,7 @@ class ExactPolicyEvaluator(object):
                     try:
                         return g[i]
                     except:
-                        if isinstance(g,list) and len(g) > 1:
+                        if isinstance(g,(list,)) and len(g) > 1:
                             assert False, 'Index error'
                         else:
                             return g
@@ -72,7 +75,7 @@ class ExactPolicyEvaluator(object):
         for initial_state in initial_states:
             self.env.isd = np.eye(state_space_dim)[initial_state]
 
-            if not isinstance(policy,list):
+            if not isinstance(policy,(list,)):
                 policy = [policy]
             Q.append(self.determinstic_env_and_greedy_policy(policy, render=False, verbose=False)[idx])
         
@@ -221,7 +224,7 @@ class ExactPolicyEvaluator(object):
         g = np.mean([ [self.discounted_sum(cost, self.gamma) for cost in np.array(x).T] for x in all_g], axis=0).tolist()
         # g = np.mean([self.discounted_sum(np.array(x), self.gamma) for x in all_g], axis=0).tolist()
 
-        if not isinstance(g,list):
+        if not isinstance(g,(list,)):
             g = [g]
 
         if self.env.env_type in ['car']:  

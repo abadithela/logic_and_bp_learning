@@ -1,4 +1,7 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import numpy as np
+from six.moves import range
 
 class PrintPolicy(object):
 	def __init__(self, size=[4,4], env=None):
@@ -11,7 +14,7 @@ class PrintPolicy(object):
 		if len(args) == 1:
 			pi = args[0]
 			size = self.size[0]*self.size[1]
-			if not isinstance(pi,list):
+			if not isinstance(pi,(list,)):
 				pi = [pi]
 
 			if len(pi) == 0: return
@@ -72,7 +75,6 @@ class PrintPolicy(object):
 			for j in range(2*len(direction_grid[0])+1):
 				if (i % 2) == 1 & (j % 2) == 1:
 					row.append(direction_grid[(i-1)//2][(j-1)//2])
-					#row.append(direction_grid[(i-1)/2][(j-1)/2])
 				elif (j % 2) == 0:
 					row.append('|')
 				else:

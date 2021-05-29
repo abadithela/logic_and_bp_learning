@@ -1,4 +1,5 @@
 
+from __future__ import absolute_import
 import numpy as np
 import deepdish as dd
 
@@ -276,7 +277,8 @@ class Dataset(Buffer):
             # [x.set_cost('c') for x in self.episodes]
         elif key == 'g':
             # Pick the idx'th constraint
-            self.scale = np.max(np.abs(np.array(self.data['g'])[:,idx]))
+            # self.scale = np.max(np.abs(np.array(self.data['g'])[:,idx]))
+            self.scale = np.max(np.abs(np.array(self.data['g'])[:-1,idx]))
             self.data['cost'] = np.array(self.data['g'])[:,idx]/self.scale
             # [x.set_cost('g', idx) for x in self.episodes]
         else:

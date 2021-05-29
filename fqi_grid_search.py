@@ -1,6 +1,9 @@
 
+from __future__ import absolute_import
+from __future__ import print_function
 from pyvirtualdisplay import Display
 import numpy as np
+from six.moves import range
 np.random.seed(3141592)
 import tensorflow as tf
 config = tf.ConfigProto()

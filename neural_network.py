@@ -1,4 +1,6 @@
 
+from __future__ import absolute_import
+from __future__ import print_function
 import numpy as np
 import keras
 from keras.models import Sequential, Model as KerasModel
@@ -11,6 +13,7 @@ from keras_tqdm import TQDMCallback
 from model import Model
 
 from keras.layers.convolutional import Conv2D
+from six.moves import range
 
 
 class NN(Model):

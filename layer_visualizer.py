@@ -1,5 +1,7 @@
+from __future__ import absolute_import
 from keras.models import Model
 import matplotlib.pyplot as plt
+from six.moves import range
 
 class LayerVisualizer(object):
     def __init__(self, model):

@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import h5py
 import numpy as np
 import deepdish as dd
@@ -19,6 +21,8 @@ import itertools
 from exact_policy_evaluation import ExactPolicyEvaluator
 
 from pyvirtualdisplay import Display
+from six.moves import range
+from six.moves import zip
 display = Display(visible=0, size=(1280, 1024))
 display.start()
 
@@ -72,7 +76,7 @@ class threadsafe_iter:
 	def __iter__(self):
 		return self
 
-	def __next__(self):
+	def next(self):
 		with self.lock:
 			return next(self.it)
 

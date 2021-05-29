@@ -1,5 +1,7 @@
 
+from __future__ import absolute_import
 import matplotlib
+from six.moves import zip
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,11 +25,11 @@ df = pd.read_csv(os.path.join(os.getcwd(),'experimental_results','lspi.csv'))
 df = pd.DataFrame(np.array([[y.strip('(').strip(')') for y in x] for x in [x.split(',') for x in np.array(df.columns)]]).astype(float),
 		columns = ['lambda_0', 'lambda_1', 'c_pi_exact', 'g_pi_exact_0', 'g_pi_exact_1', 'performance'])
 # import pdb; pdb.set_trace()
-df = pd.read_csv(os.path.join(os.getcwd(),'experimental_results','lake_results.csv'))
-data = dd.io.load(os.path.join(os.getcwd(),'experimental_results','lake_policy_improvement.h5'))
+df = pd.read_csv(os.path.join(os.getcwd(),'experimental_results','results_grid.csv'))
+data = dd.io.load(os.path.join(os.getcwd(),'experimental_results','policy_improvement_grid.h5'))
 # performance = np.array(df['performance']) 
 performance = np.array(data['c_performance'])
-df = df[['c_pi_exact','g_pi_exact_0','lambda_0']]
+df = df[['c_pi_exact','g_pi_exact_0','g_pi_exact_1','lambda_0','lambda_1']]
 		#labels=['c_pi_exact','g_pi_exact_0','g_pi_exact_1','lambda_0','lambda_1','performance'])
 
 

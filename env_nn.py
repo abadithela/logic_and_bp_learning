@@ -1,21 +1,22 @@
 
+from __future__ import absolute_import
+from __future__ import print_function
 import numpy as np
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras.models import Sequential, Model as KerasModel
-from tensorflow.keras.layers import Input, Dense, Flatten, concatenate, dot, MaxPooling2D
-from tensorflow.keras.losses import mean_squared_error
-from tensorflow.keras import optimizers
-from tensorflow.keras import regularizers
-from tensorflow.keras.callbacks import Callback, TensorBoard
+import keras
+from keras.models import Sequential, Model as KerasModel
+from keras.layers import Input, Dense, Flatten, concatenate, dot, MaxPooling2D
+from keras.losses import mean_squared_error
+from keras import optimizers
+from keras import regularizers
+from keras.callbacks import Callback, TensorBoard
 from exact_policy_evaluation import ExactPolicyEvaluator
 from keras_tqdm import TQDMCallback
-from tensorflow.keras.utils import Progbar
 from model import Model
-from tensorflow.keras import backend as K
+from keras import backend as K
 from skimage import color
 import os
 from keras.layers.convolutional import Conv2D
+from six.moves import range
 
 
 class LakeNN(Model):
@@ -113,7 +114,7 @@ class LakeNN(Model):
 
     def fit(self, X, y, verbose=0, batch_size=512, epochs=1000, evaluate=False, tqdm_verbose=True, additional_callbacks=[], **kw):
 
-        if isinstance(X,list):
+        if isinstance(X,(list,)):
             X = self.representation(X[0].reshape(-1), X[1])
         else:
             X = self.representation(X[:,0], X[:,1])
@@ -275,8 +276,6 @@ class CarNN(Model):
     def create_model(self, input_shape):
         if self.model_type == 'cnn':
             inp = Input(shape=self.input_shape, name='inp')
-            print("input layer:")
-            print(inp)
             action_mask = Input(shape=(self.dim_of_actions,), name='mask')
             def init(): return keras.initializers.TruncatedNormal(mean=0.0, stddev=0.001, seed=np.random.randint(2**32))
 

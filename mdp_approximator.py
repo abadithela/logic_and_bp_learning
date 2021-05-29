@@ -1,4 +1,5 @@
 
+from __future__ import absolute_import
 import numpy as np
 import keras
 from keras.models import Sequential, Model as KerasModel
@@ -9,6 +10,7 @@ from env_nn import LakeNN
 from keras import optimizers
 
 import gym
+from six.moves import zip
 
 
 

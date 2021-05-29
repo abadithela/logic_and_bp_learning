@@ -1,8 +1,11 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import gym
 import numpy as np
 from numpy.linalg import norm
 from gym.envs.box2d.car_racing import *
 from gym.envs.box2d.car_dynamics import ENGINE_POWER
+from six.moves import range
 # from gym.envs.classic_control.rendering import Geom, _add_attrs
 # from pyglet.gl import *
 
@@ -385,8 +388,7 @@ class ExtendedCarRacing(CarRacing):
             t.disable()
             self.render_indicators(WINDOW_W, WINDOW_H)  # TODO: find why 2x needed, wtf
             image_data = pyglet.image.get_buffer_manager().get_color_buffer().get_image_data()
-            arr = np.fromstring(image_data.get_data(), dtype=np.uint8, sep='')
-            print("passed image_data")
+            arr = np.fromstring(image_data.data, dtype=np.uint8, sep='')
             arr = arr.reshape(VP_H, VP_W, 4)
             arr = arr[::-1, :, 0:3]
 
@@ -461,7 +463,7 @@ class ExtendedCarRacing(CarRacing):
 
                 #self.render_indicators(WINDOW_W, WINDOW_H)  # TODO: find why 2x needed, wtf
                 image_data = pyglet.image.get_buffer_manager().get_color_buffer().get_image_data()
-                arr2 = np.fromstring(image_data.get_data(), dtype=np.uint8, sep='')
+                arr2 = np.fromstring(image_data.data, dtype=np.uint8, sep='')
                 #import pdb; pdb.set_trace()
                 arr2 = arr2.reshape(WINDOW_H, WINDOW_W, 4)
                 arr2 = arr2[::-1, :, 0:3]

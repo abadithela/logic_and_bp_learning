@@ -1,5 +1,8 @@
+from __future__ import absolute_import
 import deepdish as dd
 import matplotlib
+from six.moves import range
+from six.moves import zip
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
@@ -216,7 +219,7 @@ axs.append(fig.add_subplot(grid[:3, 2:]))
 axs.append(fig.add_subplot(grid[3:, 2:]))
 
 
-for idx in list(data['g_eval'].keys()):
+for idx in data['g_eval'].keys():
 	colors = color_gen()
 	ax = axs[idx]
 	ax.grid(alpha=.35)

@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
 
+from __future__ import absolute_import
+from __future__ import print_function
 from fitted_algo import FittedAlgo
 from mdp_approximator import MDPApproximator
 from model import Model
 import numpy as np
 from tqdm import tqdm
 import scipy.signal as signal
+from six.moves import range
+from six.moves import zip
 from functools import reduce
 
 class InversePropensityScorer(object):
