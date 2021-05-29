@@ -138,7 +138,7 @@ def main(env_name, headless):
                                                        position_of_holes=position_of_holes,
                                                        num_frame_stack=num_frame_stack)
         print("Environment Best Response Algorithm")
-        pdb.set_trace()
+        # pdb.set_trace()
         fitted_off_policy_evaluation_algorithm = LakeFittedQEvaluation(initial_states, 
                                                            state_space_dim + action_space_dim, 
                                                            [map_size, map_size], 
