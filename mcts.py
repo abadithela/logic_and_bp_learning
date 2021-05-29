@@ -61,8 +61,8 @@ class MCTS:
         #print("-------- Begin expand ------")
         if node in self.children:
             return  # already expanded
-        if node in violated_constraint_nodes
-            return
+        if node.is_constraint1_violated() and node.is_constraint2_violated():
+            return  # already expanded
         self.children[node] = node.find_children()
         #print("-------- End expand --------")
 
