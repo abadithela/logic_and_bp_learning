@@ -1,4 +1,6 @@
-from tensorflow.keras import backend as K
+
+from __future__ import absolute_import
+from keras import backend as K
 import numpy as np
 
 class FittedAlgo(object):

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import gym
 import numpy as np
 from gym.envs.registration import register
@@ -26,7 +27,9 @@ class ExtendedFrozenLake(FrozenLakeEnv):
         self.lastaction=a
 
         c = -r
-        g = [int(d and not r)]
+        g1 = int(d and not r)
+        g2 = int(a == 2)
+        g = [g1, g2]
         return (s, (c,g), d, {"prob" : p})
 
     @staticmethod

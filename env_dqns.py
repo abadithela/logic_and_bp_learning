@@ -1,6 +1,8 @@
 
+from __future__ import absolute_import
 from DQN import DeepQLearning
 from env_nn import *
+import six
 
 class LakeDQN(DeepQLearning):
     def __init__(self, *args, **kw):
@@ -67,7 +69,7 @@ class CarDQN(DeepQLearning):
         Biased (toward movement) random
         '''
         if self.gas_actions is None:
-            self.gas_actions = {key:val[1] == 1 and val[2] == 0 for key,val in self.action_space_map.items()}
+            self.gas_actions = {key:val[1] == 1 and val[2] == 0 for key,val in six.iteritems(self.action_space_map)}
 
         action_weights = 14. * np.array(list(self.gas_actions.values())) + 1.0
         action_weights /= np.sum(action_weights)

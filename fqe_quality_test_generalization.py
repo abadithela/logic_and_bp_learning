@@ -1,5 +1,8 @@
 
+from __future__ import absolute_import
+from __future__ import print_function
 import numpy as np
+from six.moves import range
 np.set_printoptions(suppress=True)
 np.random.seed(314)
 import tensorflow as tf

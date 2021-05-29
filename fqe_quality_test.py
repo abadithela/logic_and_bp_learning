@@ -1,5 +1,10 @@
 
+from __future__ import absolute_import
+from __future__ import print_function
 import numpy as np
+import six
+from six.moves import range
+from six.moves import zip
 np.random.seed(0)
 import tensorflow as tf
 from optimization_problem import Dataset
@@ -160,12 +165,12 @@ def run_trial(idxs, dataset, policy_old, policy, percentage, epsilon, fqi, fqe, 
                 idx = 0
                 while 1:
                     idx += 1
-                    new_episode = {k:val[:idx] for k,val in episode.items()}
+                    new_episode = {k:val[:idx] for k,val in six.iteritems(episode)}
                     sampled_episodes.append(new_episode)
                     num_unique = len(np.unique(np.hstack([np.hstack([x['x'] for x in sampled_episodes]).reshape(1,-1).T, np.hstack([x['a'] for x in sampled_episodes]).reshape(1,-1).T]), axis=0))
                     sampled_episodes.pop()
                     if (float(num_unique)/maximum) >= percentage:
-                        new_episode = {k:val[:max(1,(idx-1))] for k,val in episode.items()}
+                        new_episode = {k:val[:max(1,(idx-1))] for k,val in six.iteritems(episode)}
                         sampled_episodes.append(new_episode)
                         num_unique = len(np.unique(np.hstack([np.hstack([x['x'] for x in sampled_episodes]).reshape(1,-1).T, np.hstack([x['a'] for x in sampled_episodes]).reshape(1,-1).T]), axis=0))
                         break

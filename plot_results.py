@@ -1,5 +1,7 @@
+from __future__ import absolute_import
 import deepdish as dd
 import matplotlib
+from six.moves import range
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +12,6 @@ import seaborn as sns; sns.set(color_codes=True)
 import os
 from exponentiated_gradient import ExponentiatedGradient
 from matplotlib.lines import Line2D
-import ipdb
 
 # Colors
 alpha = 0.15
@@ -50,7 +51,6 @@ def unrandomize(df, constraints, min_iteration):
 	out = []
 	for iteration in range(min_iteration, int(max(df['iteration']))):
 		df_tmp = df[df['iteration'] <= iteration]
-		# ipdb.set_trace()
 		df_tmp = df_tmp[df_tmp['g_pi_0'] < constraints[0]]
 		argmin = np.argmin(np.array(df_tmp['c_pi']))
 		out.append(np.hstack([iteration, np.array(df_tmp.iloc[argmin][['c_pi_exact', 'g_pi_exact_0']]) ]))

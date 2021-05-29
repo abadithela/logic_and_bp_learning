@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import threading
 
 class ThreadSafe:
@@ -11,7 +12,7 @@ class ThreadSafe:
     def __iter__(self):
         return self
 
-    def __next__(self):
+    def next(self):
         with self.lock:
             return next(self.it)
 

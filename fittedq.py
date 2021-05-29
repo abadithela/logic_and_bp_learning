@@ -1,11 +1,14 @@
 
+from __future__ import absolute_import
 from fitted_algo import FittedAlgo
 import numpy as np
 from tqdm import tqdm
 from env_nn import *
 from thread_safe import threadsafe_generator
+import tensorflow as tf
 from keras import backend as K
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from six.moves import range
 
 class LakeFittedQIteration(FittedAlgo):
     def __init__(self, num_inputs, grid_shape, dim_of_actions, max_epochs, gamma, model_type='mlp', position_of_goals=None, position_of_holes=None, num_frame_stack=None):

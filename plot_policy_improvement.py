@@ -1,5 +1,8 @@
+from __future__ import absolute_import
 import deepdish as dd
 import matplotlib
+from six.moves import range
+from six.moves import zip
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
@@ -202,7 +205,7 @@ baseline_labels = [['Online-RL (no constraint)', 'Regularized LSPI', r'$\pi_D$']
 # plt.clf()
 fig, axs = plt.subplots(2, sharex=True)
 
-for idx in list(data['g_eval'].keys()):
+for idx in data['g_eval'].keys():
 	colors = color_gen()
 	ax = axs[idx]
 	ax.grid(alpha=.35)
@@ -398,7 +401,7 @@ plt.show()
 plt.clf()
 fig, axs = plt.subplots(2, sharex=True)
 
-for idx in list(data['g_eval'].keys()):
+for idx in data['g_eval'].keys():
 	ax = axs[idx]
 	ax.grid(alpha=.35)
 	legend = []

@@ -1,5 +1,7 @@
 
 
+from __future__ import absolute_import
+from __future__ import print_function
 import numpy as np
 from copy import deepcopy
 from value_function import ValueFunction
@@ -7,6 +9,7 @@ import pandas as pd
 from replay_buffer import Dataset
 import deepdish as dd
 from tqdm import tqdm
+from six.moves import range
 
 class Program(object):
     def __init__(self, constraints, action_space_dim, best_response_algorithm, online_convex_algorithm, fitted_off_policy_evaluation_algorithm, exact_policy_algorithm, lambda_bound = 1., epsilon = .01, env= None, max_iterations=None, num_frame_stack=None, pic_size=None):
@@ -190,6 +193,7 @@ class Program(object):
         print('Calculating exact C, G policy evaluation')
         exact_c, exact_g, performance = self.exact_policy_evaluation.run(policy, to_monitor=True)
         if self.env.env_type == 'car':exact_g = np.array(exact_g)[[-1,2]] 
+        # if self.env.env_type == 'lake':exact_g = np.array(exact_g)[[0,1]]
         self.C_exact.add_exact_values([performance])
         self.C_exact.append(exact_c)
         self.G_exact.append(np.hstack([exact_g, np.array([0])]))
