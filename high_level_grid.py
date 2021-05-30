@@ -47,7 +47,7 @@ class MCTS_Lake(ExtendedFrozenLake):
         i = self.categorical_sample([t[0] for t in transitions], self.np_random)
         p, s, r, d= transitions[i]
         
-        c = -r + self.c
+        c = (-r + self.c*self.depth)/(self.depth+1)
         g = ((self.g*self.depth) + int(d and not r))/(self.depth+1)
         g1 = ((self.g*self.depth) + int(action == 0))/(self.depth+1)
         g2 = ((self.g*self.depth) + int(action == 2))/(self.depth+1)
