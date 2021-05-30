@@ -25,10 +25,8 @@ class MCTS_Lake(ExtendedFrozenLake):
         self.isDone = isDone
         self.depth = depth
 
-
     def get_policies(self):
         return self.policy1, self.policy2
-
 
     def find_random_child(self):
         rand = randrange(0,2)
@@ -123,7 +121,84 @@ class MCTS_Lake(ExtendedFrozenLake):
         else
             return False
     	
+def play_game():
+    def play_game():
+    trace=[]
+    tree = MCTS()
+    # save the trace
+    output_dir = os.getcwd()+'/saved_traces/'
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    filename = 'sim_trace.p'
+    filepath = output_dir + filename
+    gridworld = new_World()
+    gridworld.setup_world()
+    trace = save_scene(gridworld,trace) # save initial scene
+    #print(gridworld.print_state())
+    # gridworld = new_World()
+    # gridworld.setup_world()
+    acts = ['mergeL','stay','move', 'mergeR']
+    ego_trace = {"x": [], "y": [], "v": []}
+    env_trace = {"x": [], "y": [], "v": []}
+    for agent in gridworld.env_agents:
+        append_trace(env_trace, agent)
+    for agent in gridworld.ego_agents:
+        append_trace(ego_trace, agent)
 
+    game_trace = [] # Same as ego_trace and env_trace condensed into one step with env going first
+    k = 0 #  Time stamp
+    # Initial step by environment:
+    for agent in gridworld.env_agents:
+        gridworld.env_take_step(agent,'move')
+    for agent in gridworld.env_agents:
+        append_trace(env_trace, agent)
+        trace = save_scene(gridworld,trace) # save first env action
+    gridworld.print_state()
+    while True:
+        gridworld.ego_take_input('mergeR')  # Ego action
+        for agent in gridworld.ego_agents:
+            append_trace(ego_trace, agent)
+        game_trace.append(deepcopy(gridworld))
+        grid_term = gridworld.is_terminal()
+        trace = save_scene(gridworld,trace)
+        gridworld.print_state()
+        if grid_term:
+            if k==0:
+                print("Poor initial choices; no MCTS rollouts yet")
+            for agent in gridworld.ego_agents:
+                if gridworld.width == agent.x and agent.y == 1:
+                    print('Did not merge; end of road')
+            else:
+                print("Goal reached; ego successfully merged!")
+            break
+        else:
+            k = k+1
+        gridworldnew = deepcopy(gridworld)
+        for k in range(50):
+            #print("Rollout: ", str(k+1))
+            tree.do_rollout(gridworldnew)
+        gridworldnew = tree.choose(gridworldnew) # Env action
+        #import pdb; pdb.set_trace()
+        # sanity_chk_ego_same(grid_new, gridworld)
+        newx = gridworldnew.env_agents[0].x
+        oldx = gridworld.env_agents[0].x
+        newy = gridworldnew.env_agents[0].y
+        oldy = gridworld.env_agents[0].y
+        if newx == oldx:
+            action = 'stay'
+        elif newy != oldy:
+            action = 'mergeR'
+        else:
+            action = 'move'
+        for agent in gridworld.env_agents:
+            gridworld.env_take_step(agent,action)
+        for agent in gridworld.env_agents:
+            append_trace(env_trace, agent)
+        trace = save_scene(gridworld,trace)
+        gridworld.print_state()
+        grid_term = gridworld.is_terminal()
+    save_trace(filepath,trace)
+    return ego_trace, env_trace, game_trace
 
 if __name__ == '__main__':
     #run_random_sim(10)

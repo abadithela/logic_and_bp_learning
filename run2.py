@@ -24,7 +24,7 @@ import deepdish as dd
 import time
 import os
 import argparse
-from config_lake import *
+from config_lake2 import *
 import pdb
 # from config_car import *
 
