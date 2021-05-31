@@ -171,8 +171,8 @@ def play_game():
 
 	k = 0 #  Time stamp
 	max_iterations = 300
+	trace=[root_node.s]
 	while True or k < max_iterations:
-		trace=[root_node.s]
 		# root_node.ego_take_input('mergeR')  # Ego action
 		root_term = root_node.is_terminal()
 		if root_term:
