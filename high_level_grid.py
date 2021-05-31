@@ -21,7 +21,7 @@ from print_policy import PrintPolicy
 from keras.models import Sequential, Model as KerasModel
 
 class MCTS_Lake(ExtendedFrozenLake):
-	def __init__(self, current_state, policy1, policy2, c_history, g_history, g1_history, g2_history, depth, isDone= False, early_termination=100, desc=None, map_name="8x8",is_slippery=False):
+	def __init__(self, current_state, policy1, policy2, c_history, g_history, g1_history, g2_history, depth, isDone= False, early_termination=100, desc=None, map_name="8m2x8m2",is_slippery=False):
 		super(MCTS_Lake, self).__init__(desc=desc, early_termination=early_termination, map_name=map_name, is_slippery=is_slippery)
 
 		self.policy1 = policy1
@@ -38,7 +38,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 		return self.policy1, self.policy2
 
 	def find_random_child(self):
-		rand = randrange(0,2)
+		rand = random.randrange(0,2)
 		if (rand == 0):
 			pi = self.policy1
 		else:
@@ -71,7 +71,6 @@ class MCTS_Lake(ExtendedFrozenLake):
 
 		if len(pi1) != 0:
 			pi = pi1
-			print(self.s)
 			action = int(pi[self.s][1])
 			transitions = self.P[self.s][action]
 			i = self.categorical_sample([t[0] for t in transitions], self.np_random)
@@ -139,7 +138,7 @@ def save_trace(filename,trace):
 	print('Saving trace in pkl file')
 	#import pdb; pdb.set_trace()
 	with open(filename, 'wb') as pckl_file:
-		pickle.dump(trace, pckl_file)
+		pkl.dump(trace, pckl_file)
 
 def play_game():
 	tree = MCTS()
@@ -156,6 +155,7 @@ def play_game():
 	ncol = 8
 	row_pos = 0
 	start = (row_pos)*ncol+ col_pos # Check fromat of states
+	# policy_printer = PrintPolicy(size=[map_size, map_size], env=env)
 
 	policy1_path = "saved_pol1.csv"
 	policy2_path = "saved_pol2.csv"
@@ -166,12 +166,12 @@ def play_game():
 	g_history = 0
 	g1_history = 0
 	g2_history = 0
-	root_node = MCTS_Lake(start, policy1, policy2, c_history, g_history, g1_history, g2_history, depth=0, early_termination=100, desc=None, map_name="8x8",is_slippery=False)
+	root_node = MCTS_Lake(start, policy1, policy2, c_history, g_history, g1_history, g2_history, depth=0, early_termination=100, desc=None, map_name="8m2x8m2",is_slippery=False)
 	# trace = save_scene(gridworld,trace) # save initial scene
 
 	k = 0 #  Time stamp
 	
-	while True:
+	while True or k < max_iterations:
 		trace=[root_node]
 		# root_node.ego_take_input('mergeR')  # Ego action
 		root_term = root_node.is_terminal()
@@ -183,10 +183,12 @@ def play_game():
 				save_trace(filepath, trace)
 			break
 		else:
+			print("Finished iteration "+str(k))
+			print("================================================")
 			k = k+1
 		root_new = deepcopy(root_node)
 		for ki in range(50):
-			#print("Rollout: ", str(k+1))
+			# print("Rollout: ", str(ki+1))
 			tree.do_rollout(root_new)
 		root_new = tree.choose(root_new) # Env action
 		root_node = deepcopy(root_new) # Copying root_new to root_node

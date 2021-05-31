@@ -7,6 +7,7 @@ https://gist.github.com/qpwo/c538c6f73727e254fdc7fab81024f6e1
 from abc import ABC, abstractmethod
 from collections import defaultdict
 import math
+import pdb 
 
 class MCTS:
     "Monte Carlo tree searcher. First rollout the tree then choose a move."
@@ -38,6 +39,7 @@ class MCTS:
         self._expand(leaf)
         #print(" -------- Begin simulate -----------")
         reward = self._simulate(leaf)
+        # pdb.set_trace()
         self._backpropagate(path, reward)
 
     def _select(self, node):
@@ -45,6 +47,7 @@ class MCTS:
         path = []
         while True:
             path.append(node)
+            # pdb.set_trace()
             if node not in self.children or not self.children[node]:
                 # node is either unexplored or terminal
                 return path
@@ -67,7 +70,8 @@ class MCTS:
 
     def _simulate(self, node):
         "Returns the reward for a random simulation (to completion) of `node`"
-        invert_reward = True
+        invert_reward = False
+        state_visited = [node.s]
         while True:
             if node.is_terminal():
                 #print("---------- End Simulate ---------")
@@ -75,8 +79,15 @@ class MCTS:
                 #print(node.print_state())
                 reward = node.reward()
                 return  -1*reward if invert_reward else reward
+            # pdb.set_trace()
             node = node.find_random_child()
-            invert_reward = not invert_reward
+            # node_child = node.find_random_child()
+            # if node_child.s not in state_visited:
+            #     state_visited.append(node_child.s)
+            #     node = node_child
+            # print("In simulate: Finding random child: ")
+            # node.print_lake_status()
+            # invert_reward = not invert_reward
             #invert_reward = False
 
     def _backpropagate(self, path, reward):
