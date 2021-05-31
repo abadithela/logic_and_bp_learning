@@ -147,7 +147,7 @@ def play_game():
 	policy_dir = os.getcwd()+'/models/'
 	if not os.path.exists(output_dir):
 		os.makedirs(output_dir)
-	filename = 'sim_trace.p'
+	filename = 'sim_trace.csv'
 	filepath = output_dir + filename
 
 	# initializing:
@@ -170,9 +170,9 @@ def play_game():
 	# trace = save_scene(gridworld,trace) # save initial scene
 
 	k = 0 #  Time stamp
-	
+	max_iterations = 300
 	while True or k < max_iterations:
-		trace=[root_node]
+		trace=[root_node.s]
 		# root_node.ego_take_input('mergeR')  # Ego action
 		root_term = root_node.is_terminal()
 		if root_term:
@@ -180,7 +180,7 @@ def play_game():
 				print("Poor initial choices; no MCTS rollouts yet")
 			else:
 				print("No. of iterations are {0}.format", k)
-				save_trace(filepath, trace)
+				np.savetxt(filepath, np.array(trace), delimiter=',')
 			break
 		else:
 			print("Finished iteration "+str(k))
@@ -192,7 +192,7 @@ def play_game():
 			tree.do_rollout(root_new)
 		root_new = tree.choose(root_new) # Env action
 		root_node = deepcopy(root_new) # Copying root_new to root_node
-		trace.append(root_node)
+		trace.append(root_node.s)
 		root_term = root_node.is_terminal()
 	return trace
 
