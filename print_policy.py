@@ -37,7 +37,7 @@ class PrintPolicy(object):
 			states = np.array(list(range(size))).reshape(1,-1).T
 			actions_for_each_pi = np.hstack([[np.eye(self.action_space_dim)[p.min_over_a(np.arange(size))[1]] for p in pi]])
 			policy = np.hstack([states, np.argmax(actions_for_each_pi.mean(0), 1).reshape(1,-1).T])
-			pdb.set_trace()
+
 			Qs_for_each_pi = np.vstack([np.array([p.all_actions(np.arange(size))]) for p in pi])
 			Q = np.hstack([states, np.mean(Qs_for_each_pi,axis=0)[np.arange(Qs_for_each_pi.shape[1]),policy[:,1]].reshape(-1,1)])
 		else:

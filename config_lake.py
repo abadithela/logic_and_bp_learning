@@ -9,7 +9,7 @@ map_size = 8
 # env = gym.make('FrozenLake-no-slip-v0')
 max_time_spent_in_episode = 100
 # env = ExtendedFrozenLake(max_time_spent_in_episode, map_name = '{0}x{0}'.format(map_size), is_slippery= False)
-env = ExtendedFrozenLake(max_time_spent_in_episode, map_name = '{0}m2x{0}m2'.format(map_size), is_slippery= False)
+env = ExtendedFrozenLake(max_time_spent_in_episode, map_name = '{0}x{0}'.format(map_size), is_slippery= False)
 position_of_holes = np.arange(env.desc.shape[0]*env.desc.shape[1]).reshape(env.desc.shape)[np.nonzero(env.desc == 'H')]
 position_of_goals = np.arange(env.desc.shape[0]*env.desc.shape[1]).reshape(env.desc.shape)[np.nonzero(env.desc == 'G')]
 

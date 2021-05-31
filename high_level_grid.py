@@ -115,7 +115,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 		# return(self.c, [self.g, self.g1, self.g2])
 		return self.c 
 
-	def is_terminal(self, tau1=0.1, tau2=0.1, tau_s=0.1):
+	def is_terminal(self, tau1=0.4, tau2=0.4, tau_s=0.1):
 		if self.is_constraint1_violated(tau1) and self.is_constraint2_violated(tau2):
 			return True
 		elif self.is_safety_constraint_violated(tau_s):
