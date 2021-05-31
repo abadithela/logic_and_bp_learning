@@ -57,7 +57,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 		g1 = ((self.g*self.depth) + int(action == 0))/(self.depth+1)
 		g2 = ((self.g*self.depth) + int(action == 2))/(self.depth+1)
 
-		child = MCTS_Lake(s, policy1, policy2, c, g, g1, g2, (self.depth+1), isDone=d)
+		child = MCTS_Lake(s, self.policy1, self.policy2, c, g, g1, g2, (self.depth+1), isDone=d)
 		return child
 
 	def print_lake_status(self):
@@ -82,7 +82,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 			g1 = ((self.g*self.depth) + int(action == 0))/(self.depth+1)
 			g2 = ((self.g*self.depth) + int(action == 2))/(self.depth+1)
 
-			child1 = MCTS_Lake(s, policy1, policy2, c, g, g1, g2, (self.depth+1), isDone=d)
+			child1 = MCTS_Lake(s, self.policy1, self.policy2, c, g, g1, g2, (self.depth+1), isDone=d)
 		else:
 			child1 = None
 
@@ -98,7 +98,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 			g1 = ((self.g*self.depth) + int(action == 0))/(self.depth+1)
 			g2 = ((self.g*self.depth) + int(action == 2))/(self.depth+1)
 
-			child2 = MCTS_Lake(s, policy1, policy2, c, g, g1, g2, (self.depth+1), isDone=d)
+			child2 = MCTS_Lake(s, self.policy1, self.policy2, c, g, g1, g2, (self.depth+1), isDone=d)
 		else:
 			child2 = None
 
@@ -155,7 +155,7 @@ def play_game():
 	col_pos= 3
 	ncol = 8
 	row_pos = 0
-	start = (row_pos -1)*ncol+ col_pos # Check fromat of states
+	start = (row_pos)*ncol+ col_pos # Check fromat of states
 
 	policy1_path = "saved_pol1.csv"
 	policy2_path = "saved_pol2.csv"
