@@ -71,7 +71,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 
 		if len(pi1) != 0:
 			pi = pi1
-			pdb.set_trace()
+			print(self.s)
 			action = int(pi[self.s][1])
 			transitions = self.P[self.s][action]
 			i = self.categorical_sample([t[0] for t in transitions], self.np_random)
