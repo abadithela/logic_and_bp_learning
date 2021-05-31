@@ -21,7 +21,7 @@ class ExtendedFrozenLake(FrozenLakeEnv):
 
     def step(self, a):
         transitions = self.P[self.s][a]
-        pdb.set_trace()
+        # pdb.set_trace()
         i = self.categorical_sample([t[0] for t in transitions], self.np_random)
         p, s, r, d= transitions[i]
         self.s = s

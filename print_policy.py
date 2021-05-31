@@ -9,6 +9,20 @@ class PrintPolicy(object):
 		self.size = size
 		self.action_space_dim = len(list(self.mapping.keys()))
 		self.env = env
+	def save(self, outfile, *args):
+		if len(args) == 1:
+			pi = args[0]
+			size = self.size[0]*self.size[1]
+			if not isinstance(pi,(list,)):
+				pi = [pi]
+
+			if len(pi) == 0: return
+	
+		
+			states = np.array(list(range(size))).reshape(1,-1).T
+			actions_for_each_pi = np.hstack([[np.eye(self.action_space_dim)[p.min_over_a(np.arange(size))[1]] for p in pi]])
+			policy = np.hstack([states, np.argmax(actions_for_each_pi.mean(0), 1).reshape(1,-1).T])
+			np.savetext(outfile, policy, delimiter=',')
 
 	def pprint(self, *args):
 		if len(args) == 1:
@@ -23,7 +37,7 @@ class PrintPolicy(object):
 			states = np.array(list(range(size))).reshape(1,-1).T
 			actions_for_each_pi = np.hstack([[np.eye(self.action_space_dim)[p.min_over_a(np.arange(size))[1]] for p in pi]])
 			policy = np.hstack([states, np.argmax(actions_for_each_pi.mean(0), 1).reshape(1,-1).T])
-
+			pdb.set_trace()
 			Qs_for_each_pi = np.vstack([np.array([p.all_actions(np.arange(size))]) for p in pi])
 			Q = np.hstack([states, np.mean(Qs_for_each_pi,axis=0)[np.arange(Qs_for_each_pi.shape[1]),policy[:,1]].reshape(-1,1)])
 		else:
@@ -36,9 +50,6 @@ class PrintPolicy(object):
 		Q_grid = [['  H  ' for x in range(self.size[1])] for y in range(self.size[0])]
 		Q_grid[-1][-1] = '  G  '
 		# Q_grid[0][0] = '  S '
-
-		
-
 
 		for direction in policy:
 			row = int(direction[0]/self.size[1])
@@ -100,3 +111,4 @@ class PrintPolicy(object):
 					row.append('_____')
 			print(' '.join(row))
 		print()
+

@@ -331,13 +331,12 @@ def main(env_name, headless):
 
             lambda_t = lambdas[-1]
             pi_t, values = problem.best_response(lambda_t, desc='FQI pi_{0}_{1}'.format(iteration, i), exact=exact_policy_algorithm)
-            policies.append(pi_t) # Updating policies
+            policies.append(pi_t) # Updating policies --- Keras models
             problem.update(pi_t, values, iteration) #Evaluate C(pi_t), G(pi_t) and save
 
     # Saving old policy:
-    policy_final = policies[-1]
-    pdb.set_trace()
-    policy_final.save(final_policy_path)
+    outfile = "saved_mod_pol2.csv"
+    policy_printer.save(outfile, policies)
 
 if __name__ == "__main__":
     

@@ -335,9 +335,8 @@ def main(env_name, headless):
             problem.update(pi_t, values, iteration) #Evaluate C(pi_t), G(pi_t) and save
 
     # Saving old policy:
-    policy_final = policies[-1]
-    pdb.set_trace()
-    policy_final.save(final_policy_path)
+    outfile = "saved_mod_pol1.csv"
+    policy_printer.save(outfile, policies)
 
 if __name__ == "__main__":
     
