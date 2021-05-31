@@ -18,3 +18,4 @@ __pycache__/stochastic_policy.cpython-38.pyc
 __pycache__/thread_safe.cpython-38.pyc
 __pycache__/value_function.cpython-38.pyc
 *.pyc
+*.pyc
