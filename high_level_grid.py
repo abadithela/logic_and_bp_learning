@@ -202,5 +202,4 @@ if __name__ == '__main__':
 	print("Robot Trajectory")
 	# print(ego_trace)
 	for ei in ego_trace:
-		ei.print_lake_status()
-
+		print(ei)
