@@ -44,12 +44,10 @@ class MCTS_Lake(ExtendedFrozenLake):
 		else:
 			pi = self.policy2
 
-		if not isinstance(pi,(list,)):
-			pi = [pi]
 
 		if len(pi) == 0: return
 
-		action = pi(self.s)[0]
+		action = int(pi[self.s][0])
 		transitions = self.P[self.s][action]
 		i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 		p, s, r, d= transitions[i]
@@ -70,16 +68,11 @@ class MCTS_Lake(ExtendedFrozenLake):
 		pi1 = self.policy1
 		pi2 = self.policy2
 
-		if not isinstance(pi1,(list,)):
-			pi1 = [pi1]
-
-		if not isinstance(pi2,(list,)):
-			pi2 = [pi2]
 
 		if len(pi1) != 0:
 			pi = pi1
 			pdb.set_trace()
-			action = pi(self.s)[0]
+			action = int(pi[self.s][0])
 			transitions = self.P[self.s][action]
 			i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 			p, s, r, d= transitions[i]
@@ -95,7 +88,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 
 		if len(pi2) != 0:
 			pi = pi2
-			action = pi(self.s)[0]
+			action = int(pi[self.s][0])
 			transitions = self.P[self.s][action]
 			i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 			p, s, r, d= transitions[i]
@@ -166,8 +159,8 @@ def play_game():
 
 	policy1_path = "saved_pol1.csv"
 	policy2_path = "saved_pol2.csv"
-	policy1 = np.loadtxt('policy1_path', delimiter=',')
-	policy2 = np.loadtxt('policy2_path', delimiter=',')
+	policy1 = np.loadtxt(policy1_path, delimiter=',')
+	policy2 = np.loadtxt(policy2_path, delimiter=',')
 
 	c_history = 0
 	g_history = 0
