@@ -47,7 +47,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 
 		if len(pi) == 0: return
 
-		action = int(pi[self.s][0])
+		action = int(pi[self.s][1])
 		transitions = self.P[self.s][action]
 		i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 		p, s, r, d= transitions[i]
@@ -72,7 +72,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 		if len(pi1) != 0:
 			pi = pi1
 			pdb.set_trace()
-			action = int(pi[self.s][0])
+			action = int(pi[self.s][1])
 			transitions = self.P[self.s][action]
 			i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 			p, s, r, d= transitions[i]
@@ -88,7 +88,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 
 		if len(pi2) != 0:
 			pi = pi2
-			action = int(pi[self.s][0])
+			action = int(pi[self.s][1])
 			transitions = self.P[self.s][action]
 			i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 			p, s, r, d= transitions[i]
