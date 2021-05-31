@@ -11,8 +11,16 @@
 import frozen_lake
 import random 
 from env_dqns import *
+from mcts import MCTS, Node
+from print_policy import PrintPolicy
+from keras.models import load_model
+from copy import deepcopy
+import os
+import pickle as pkl
+from print_policy import PrintPolicy
+
 class MCTS_Lake(ExtendedFrozenLake):
-	def __init__(self, current_state, policy1, policy2, c_history, g_history, g1_history, g2_history, isDone= False, depth, early_termination, desc=None, map_name="8x8",is_slippery=False):
+	def __init__(self, current_state, policy1, policy2, c_history, g_history, g1_history, g2_history, isDone= False, depth, early_termination=100, desc=None, map_name="8x8",is_slippery=False):
         super(MCTS_Lake, self).__init__(desc=desc, early_termination=early_termination, map_name=map_name, is_slippery=is_slippery)
 
         self.policy1 = policy1
@@ -53,7 +61,10 @@ class MCTS_Lake(ExtendedFrozenLake):
         child = MCTS_Lake(s, policy1, policy2, c, g, g1, g2, d, (self.depth+1), early_termination)
         return child
 
-
+    def print_lake_status(self):
+        print("Position: ") 
+        print(self.s)
+        
     def find_children(self):
         pi1 = policy1
         pi2 = policy2
@@ -99,16 +110,25 @@ class MCTS_Lake(ExtendedFrozenLake):
         return child1, child2
 
     def reward():
-        return(self.c, [self.g, self.g1, self.g2])
+        # return(self.c, [self.g, self.g1, self.g2])
+        return self.c 
 
-    def is_terminal(tau1=0.1, tau2=0.1):
+    def is_terminal(tau1=0.1, tau2=0.1, tau_s=0.1):
         if self.is_constraint1_violated(tau1) and self.is_constraint2_violated(tau2):
+            return True
+        elif self.is_safety_constraint_violated(tau_s):
             return True
         elif self.isDone:
             return True
         else: 
             return False
-            
+    
+    def is_safety_constraint_violated(tau_s):
+        if self.g - tau_s > 0:
+            return True
+        else
+            return False
+
     def is_constraint1_violated(tau1):
         if self.g1 - tau1 > 0:
             return True
@@ -120,94 +140,65 @@ class MCTS_Lake(ExtendedFrozenLake):
             return True
         else
             return False
-    	
+def save_trace(filename,trace):
+    print('Saving trace in pkl file')
+    #import pdb; pdb.set_trace()
+    with open(filename, 'wb') as pckl_file:
+        pickle.dump(trace, pckl_file)
+
 def play_game():
-    def play_game():
-    trace=[]
     tree = MCTS()
     # save the trace
     output_dir = os.getcwd()+'/saved_traces/'
+    policy_dir = os.getcwd()+'/models/'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     filename = 'sim_trace.p'
     filepath = output_dir + filename
-    gridworld = new_World()
-    gridworld.setup_world()
-    trace = save_scene(gridworld,trace) # save initial scene
-    #print(gridworld.print_state())
-    # gridworld = new_World()
-    # gridworld.setup_world()
-    acts = ['mergeL','stay','move', 'mergeR']
-    ego_trace = {"x": [], "y": [], "v": []}
-    env_trace = {"x": [], "y": [], "v": []}
-    for agent in gridworld.env_agents:
-        append_trace(env_trace, agent)
-    for agent in gridworld.ego_agents:
-        append_trace(ego_trace, agent)
 
-    game_trace = [] # Same as ego_trace and env_trace condensed into one step with env going first
+    # initializing:
+    start = (4,0) # Check fromat of states
+    policy1_path = policy_dir + 'final_policy_right_8_mlp.h5'
+    policy2_path = policy_dir + 'final_policy_left_8_mlp.h5'
+    policy1 = load_model(policy1_path)
+    policy2 = load_model(policy2_path)
+    c_history = 0
+    g_history = 0
+    g1_history = 0
+    g2_history = 0
+    root_node = MCTS_Lake(start, policy1, policy2, c_history, g_history, g1_history, g2_history, depth=0, early_termination=100, desc=None, map_name="8x8",is_slippery=False)
+    # trace = save_scene(gridworld,trace) # save initial scene
+
     k = 0 #  Time stamp
-    # Initial step by environment:
-    for agent in gridworld.env_agents:
-        gridworld.env_take_step(agent,'move')
-    for agent in gridworld.env_agents:
-        append_trace(env_trace, agent)
-        trace = save_scene(gridworld,trace) # save first env action
-    gridworld.print_state()
+    
     while True:
-        gridworld.ego_take_input('mergeR')  # Ego action
-        for agent in gridworld.ego_agents:
-            append_trace(ego_trace, agent)
-        game_trace.append(deepcopy(gridworld))
-        grid_term = gridworld.is_terminal()
-        trace = save_scene(gridworld,trace)
-        gridworld.print_state()
-        if grid_term:
+        trace=[root_node]
+        # root_node.ego_take_input('mergeR')  # Ego action
+        root_term = root_node.is_terminal()
+        if root_term:
             if k==0:
                 print("Poor initial choices; no MCTS rollouts yet")
-            for agent in gridworld.ego_agents:
-                if gridworld.width == agent.x and agent.y == 1:
-                    print('Did not merge; end of road')
             else:
-                print("Goal reached; ego successfully merged!")
+                print("No. of iterations are {0}.format", k)
+                save_trace(filepath, trace)
             break
         else:
             k = k+1
-        gridworldnew = deepcopy(gridworld)
-        for k in range(50):
+        root_new = deepcopy(root_node)
+        for ki in range(50):
             #print("Rollout: ", str(k+1))
-            tree.do_rollout(gridworldnew)
-        gridworldnew = tree.choose(gridworldnew) # Env action
-        #import pdb; pdb.set_trace()
-        # sanity_chk_ego_same(grid_new, gridworld)
-        newx = gridworldnew.env_agents[0].x
-        oldx = gridworld.env_agents[0].x
-        newy = gridworldnew.env_agents[0].y
-        oldy = gridworld.env_agents[0].y
-        if newx == oldx:
-            action = 'stay'
-        elif newy != oldy:
-            action = 'mergeR'
-        else:
-            action = 'move'
-        for agent in gridworld.env_agents:
-            gridworld.env_take_step(agent,action)
-        for agent in gridworld.env_agents:
-            append_trace(env_trace, agent)
-        trace = save_scene(gridworld,trace)
-        gridworld.print_state()
-        grid_term = gridworld.is_terminal()
-    save_trace(filepath,trace)
-    return ego_trace, env_trace, game_trace
+            tree.do_rollout(root_new)
+        root_new = tree.choose(root_new) # Env action
+        root_node = deepcopy(root_new) # Copying root_new to root_node
+        trace.append(root_node)
+        root_term = root_node.is_terminal()
+    return trace
 
 if __name__ == '__main__':
     #run_random_sim(10)
-    output_dir = os.getcwd()+'/saved_traces/'
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    filename = 'sim_trace.p'
-    filepath = output_dir + filename
     ego_trace = play_game()
     print("Robot Trajectory")
     # print(ego_trace)
-    print("")
+    for ei in ego_trace:
+        ei.print_lake_status()
+

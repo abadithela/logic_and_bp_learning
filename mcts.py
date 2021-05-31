@@ -16,7 +16,6 @@ class MCTS:
         self.N = defaultdict(int)  # total visit count for each node
         self.children = dict()  # children of each node
         self.exploration_weight = exploration_weight
-        self.max_cells = 10
     def choose(self, node):
         "Choose the best successor of node. (Choose a move in the game)"
         if node.is_terminal():
@@ -75,7 +74,7 @@ class MCTS:
                 #print("Terminal state in simulate: ")
                 #print(node.print_state())
                 reward = node.reward()
-                return self.max_cells - reward if invert_reward else reward
+                return  -1*reward if invert_reward else reward
             node = node.find_random_child()
             invert_reward = not invert_reward
             #invert_reward = False
@@ -85,7 +84,7 @@ class MCTS:
         for node in reversed(path):
             self.N[node] += 1
             self.Q[node] += reward
-            reward = self.max_cells - reward  # 1 for me is 0 for my enemy, and vice versa
+            reward = -1*reward  # 1 for me is 0 for my enemy, and vice versa
 
     def _uct_select(self, node):
         "Select a child of node, balancing exploration & exploitation"
