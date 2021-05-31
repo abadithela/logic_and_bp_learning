@@ -163,10 +163,12 @@ def play_game():
 	ncol = 8
 	row_pos = 0
 	start = (row_pos -1)*ncol+ col_pos # Check fromat of states
-	policy1_path = policy_dir + 'final_policy_right_8_mlp.h5'
-	policy2_path = policy_dir + 'final_policy_left_8_mlp.h5'
-	policy1 = load_model(policy1_path)
-	policy2 = load_model(policy2_path)
+
+	policy1_path = "saved_pol1.csv"
+	policy2_path = "saved_pol2.csv"
+	policy1 = np.loadtxt('policy1_path', delimiter=',')
+	policy2 = np.loadtxt('policy2_path', delimiter=',')
+
 	c_history = 0
 	g_history = 0
 	g1_history = 0
