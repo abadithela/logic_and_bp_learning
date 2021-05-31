@@ -33,6 +33,7 @@ max_number_of_main_algo_iterations = 100 # After how many iterations to cut off 
 model_type = 'mlp'
 old_policy_name = 'pi_old_map_size_{0}_{1}.h5'.format(map_size, model_type)
 final_policy_name = 'final_policy_left_{0}_{1}.h5'.format(map_size, model_type)
+# final_policy_name = 'test_{0}_{1}.h5'.format(map_size, model_type)
 # constraints = [.1, 0]
 constraints = [0, .1] + [0.4]
 constraints_cared_about = [0, 1]

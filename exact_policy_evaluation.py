@@ -7,7 +7,7 @@ import scipy.signal as signal
 from replay_buffer import Buffer
 import os
 from six.moves import range
-
+import pdb
 
 class ExactPolicyEvaluator(object):
     def __init__(self, action_space_map, gamma, env=None, num_frame_stack=None, frame_skip = None, pic_size = None, constraint_thresholds=None, constraints_cared_about=None):
@@ -171,7 +171,6 @@ class ExactPolicyEvaluator(object):
                     if to_monitor: self.monitor.save()
                     # self.env.render()
                 time_steps += 1
-                
                 action = pi(self.buffer.current_state())[0]
                 # action = np.argmin(pi.model.predict(np.rollaxis(np.dot(self.buffer.current_state()/255. , [0.299, 0.587, 0.114])[np.newaxis,...],1,4)))
                 # print self.action_space_map[action]

@@ -337,7 +337,7 @@ def main(env_name, headless):
     # Saving old policy:
     policy_final = policies[-1]
     pdb.set_trace()
-    policy_final.model.save(final_policy_path)
+    policy_final.save(final_policy_path)
 
 if __name__ == "__main__":
     
