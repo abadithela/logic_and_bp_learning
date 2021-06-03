@@ -21,7 +21,7 @@ from print_policy import PrintPolicy
 from keras.models import Sequential, Model as KerasModel
 
 class MCTS_Lake(ExtendedFrozenLake):
-	def __init__(self, current_state, policy1, policy2, c_history, g_history, g1_history, g2_history, depth, isDone= False, early_termination=100, desc=None, map_name="8m2x8m2",is_slippery=False):
+	def __init__(self, current_state, policy1, policy2, c_history, g_history, g1_history, g2_history, depth, isDone, early_termination=100, desc=None, map_name="8x8",is_slippery=False):
 		super(MCTS_Lake, self).__init__(desc=desc, early_termination=early_termination, map_name=map_name, is_slippery=is_slippery)
 
 		self.policy1 = policy1
@@ -44,15 +44,14 @@ class MCTS_Lake(ExtendedFrozenLake):
 		else:
 			pi = self.policy2
 
-
-		if len(pi) == 0: return
+		# if len(pi) == 0: return None
 
 		action = int(pi[self.s][1])
 		transitions = self.P[self.s][action]
 		i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 		p, s, r, d= transitions[i]
 		
-		c = (-r + self.c*self.depth)/(self.depth+1)
+		c = r + self.c
 		g = ((self.g*self.depth) + int(d and not r))/(self.depth+1)
 		g1 = ((self.g*self.depth) + int(action == 0))/(self.depth+1)
 		g2 = ((self.g*self.depth) + int(action == 2))/(self.depth+1)
@@ -76,7 +75,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 			i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 			p, s, r, d= transitions[i]
 
-			c = (-r + self.c*self.depth)/(self.depth+1)
+			c = r + self.c
 			g = ((self.g*self.depth) + int(d and not r))/(self.depth+1)
 			g1 = ((self.g*self.depth) + int(action == 0))/(self.depth+1)
 			g2 = ((self.g*self.depth) + int(action == 2))/(self.depth+1)
@@ -92,7 +91,7 @@ class MCTS_Lake(ExtendedFrozenLake):
 			i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 			p, s, r, d= transitions[i]
 
-			c = (-r + self.c*self.depth)/(self.depth+1)
+			c = r + self.c
 			g = ((self.g*self.depth) + int(d and not r))/(self.depth+1)
 			g1 = ((self.g*self.depth) + int(action == 0))/(self.depth+1)
 			g2 = ((self.g*self.depth) + int(action == 2))/(self.depth+1)
@@ -134,6 +133,12 @@ class MCTS_Lake(ExtendedFrozenLake):
 			return True
 		else:
 			return False
+
+	# def __hash__(self):
+	# 	return hash((self.s, self.g1, self.g2))
+	# def __eq__(self, other):
+	# 	return ((self.s == other.s) and (self.g1 == other.g1) and (self.g2 == other.g2))
+
 def save_trace(filename,trace):
 	print('Saving trace in pkl file')
 	#import pdb; pdb.set_trace()
@@ -151,9 +156,9 @@ def play_game():
 	filepath = output_dir + filename
 
 	# initializing:
-	col_pos= 3
+	col_pos= 4
 	ncol = 8
-	row_pos = 0
+	row_pos = 7
 	start = (row_pos)*ncol+ col_pos # Check fromat of states
 	# policy_printer = PrintPolicy(size=[map_size, map_size], env=env)
 
@@ -166,16 +171,17 @@ def play_game():
 	g_history = 0
 	g1_history = 0
 	g2_history = 0
-	root_node = MCTS_Lake(start, policy1, policy2, c_history, g_history, g1_history, g2_history, depth=0, early_termination=100, desc=None, map_name="8m2x8m2",is_slippery=False)
+	root_node = MCTS_Lake(start, policy1, policy2, c_history, g_history, g1_history, g2_history, isDone=False, depth=0, early_termination=100, desc=None, map_name="8x8",is_slippery=False)
 	# trace = save_scene(gridworld,trace) # save initial scene
 
 	k = 0 #  Time stamp
-	max_iterations = 300
+
+	max_iterations = 200
 	trace=[root_node.s]
-	while True or k < max_iterations:
+	while True:
 		# root_node.ego_take_input('mergeR')  # Ego action
 		root_term = root_node.is_terminal()
-		if root_term:
+		if root_term or k>max_iterations:
 			if k==0:
 				print("Poor initial choices; no MCTS rollouts yet")
 			else:
@@ -187,7 +193,7 @@ def play_game():
 			print("================================================")
 			k = k+1
 		root_new = deepcopy(root_node)
-		for ki in range(50):
+		for ki in range(200):
 			# print("Rollout: ", str(ki+1))
 			tree.do_rollout(root_new)
 		root_new = tree.choose(root_new) # Env action

@@ -7,7 +7,9 @@ https://gist.github.com/qpwo/c538c6f73727e254fdc7fab81024f6e1
 from abc import ABC, abstractmethod
 from collections import defaultdict
 import math
-import pdb 
+import pdb
+from copy import deepcopy
+
 
 class MCTS:
     "Monte Carlo tree searcher. First rollout the tree then choose a move."
@@ -71,20 +73,23 @@ class MCTS:
     def _simulate(self, node):
         "Returns the reward for a random simulation (to completion) of `node`"
         invert_reward = False
-        state_visited = [node.s]
+        # state_visited = []
+        # state_visited.append(int(node.s))
+        # k = 0
         while True:
+            # k = k+1
             if node.is_terminal():
-                #print("---------- End Simulate ---------")
-                #print("Terminal state in simulate: ")
-                #print(node.print_state())
+                # print("---------- End Simulate ---------")
+                # print("Terminal state in simulate: ")
+                # node.print_lake_status()
                 reward = node.reward()
                 return  -1*reward if invert_reward else reward
             # pdb.set_trace()
             node = node.find_random_child()
             # node_child = node.find_random_child()
-            # if node_child.s not in state_visited:
-            #     state_visited.append(node_child.s)
-            #     node = node_child
+            # if int(node_child.s) not in state_visited:
+            #     state_visited.append(int(node_child.s))
+            #     node = deepcopy(node_child)
             # print("In simulate: Finding random child: ")
             # node.print_lake_status()
             # invert_reward = not invert_reward
@@ -95,7 +100,7 @@ class MCTS:
         for node in reversed(path):
             self.N[node] += 1
             self.Q[node] += reward
-            reward = -1*reward  # 1 for me is 0 for my enemy, and vice versa
+            # reward = -1*reward  # 1 for me is 0 for my enemy, and vice versa
 
     def _uct_select(self, node):
         "Select a child of node, balancing exploration & exploitation"
