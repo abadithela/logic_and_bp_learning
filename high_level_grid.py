@@ -52,7 +52,9 @@ class MCTS_Lake(ExtendedFrozenLake):
 		i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 		p, s, r, d= transitions[i]
 		
-		c = (-r + self.c*self.depth)/(self.depth+1)
+		# c = (-r + self.c*self.depth)/(self.depth+1)
+		# c = (-r + self.c*self.depth)
+		c = (r + self.c)
 		g = ((self.g*self.depth) + int(d and not r))/(self.depth+1)
 		g1 = ((self.g*self.depth) + int(action == 0))/(self.depth+1)
 		g2 = ((self.g*self.depth) + int(action == 2))/(self.depth+1)
@@ -76,7 +78,9 @@ class MCTS_Lake(ExtendedFrozenLake):
 			i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 			p, s, r, d= transitions[i]
 
-			c = (-r + self.c*self.depth)/(self.depth+1)
+			# c = (-r + self.c*self.depth)/(self.depth+1)
+			# c = (-r + self.c)
+			c = (r + self.c)
 			g = ((self.g*self.depth) + int(d and not r))/(self.depth+1)
 			g1 = ((self.g*self.depth) + int(action == 0))/(self.depth+1)
 			g2 = ((self.g*self.depth) + int(action == 2))/(self.depth+1)
@@ -92,7 +96,9 @@ class MCTS_Lake(ExtendedFrozenLake):
 			i = self.categorical_sample([t[0] for t in transitions], self.np_random)
 			p, s, r, d= transitions[i]
 
-			c = (-r + self.c*self.depth)/(self.depth+1)
+			# c = (-r + self.c*self.depth)/(self.depth+1)
+			c = (r + self.c)
+			# c = (-r + self.c)
 			g = ((self.g*self.depth) + int(d and not r))/(self.depth+1)
 			g1 = ((self.g*self.depth) + int(action == 0))/(self.depth+1)
 			g2 = ((self.g*self.depth) + int(action == 2))/(self.depth+1)
@@ -103,9 +109,15 @@ class MCTS_Lake(ExtendedFrozenLake):
 
 		return child1, child2
 
+	# def hash(self):
+	# 	return hash((self.s, self.g1, self.g2))
+	# def eq(self, other):
+	# 	return ((self.s == other.s) and (self.g1 == other.g1) and (self.g2 == other.g2))
 	def reward(self):
 		# return(self.c, [self.g, self.g1, self.g2])
-		return self.c 
+		l = 0.0 # l = 0.5
+		# pdb.set_trace()
+		return self.c - l*(self.g - 0.1)
 
 	def is_terminal(self, tau1=0.4, tau2=0.4, tau_s=0.1):
 		if self.is_constraint1_violated(tau1) and self.is_constraint2_violated(tau2):
@@ -147,13 +159,13 @@ def play_game():
 	policy_dir = os.getcwd()+'/models/'
 	if not os.path.exists(output_dir):
 		os.makedirs(output_dir)
-	filename = 'sim_trace.csv'
+	filename = 'sim_trace2.csv'
 	filepath = output_dir + filename
 
 	# initializing:
-	col_pos= 3
+	col_pos= 5
 	ncol = 8
-	row_pos = 0
+	row_pos = 7
 	start = (row_pos)*ncol+ col_pos # Check fromat of states
 	# policy_printer = PrintPolicy(size=[map_size, map_size], env=env)
 
@@ -161,7 +173,7 @@ def play_game():
 	policy2_path = "saved_pol2.csv"
 	policy1 = np.loadtxt(policy1_path, delimiter=',')
 	policy2 = np.loadtxt(policy2_path, delimiter=',')
-
+	pdb.set_trace()
 	c_history = 0
 	g_history = 0
 	g1_history = 0
@@ -172,7 +184,7 @@ def play_game():
 	k = 0 #  Time stamp
 	max_iterations = 300
 	trace=[root_node.s]
-	while True or k < max_iterations:
+	while True:
 		# root_node.ego_take_input('mergeR')  # Ego action
 		root_term = root_node.is_terminal()
 		if root_term:
@@ -181,6 +193,8 @@ def play_game():
 			else:
 				print("No. of iterations are {0}.format", k)
 				np.savetxt(filepath, np.array(trace), delimiter=',')
+			break
+		elif k> max_iterations:
 			break
 		else:
 			print("Finished iteration "+str(k))
@@ -193,6 +207,7 @@ def play_game():
 		root_new = tree.choose(root_new) # Env action
 		root_node = deepcopy(root_new) # Copying root_new to root_node
 		trace.append(root_node.s)
+		print(root_node.s)
 		root_term = root_node.is_terminal()
 	return trace
 

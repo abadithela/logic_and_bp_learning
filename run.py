@@ -335,8 +335,12 @@ def main(env_name, headless):
             problem.update(pi_t, values, iteration) #Evaluate C(pi_t), G(pi_t) and save
 
     # Saving old policy:
-    outfile = "saved_mod_pol1.csv"
+    pdb.set_trace()
+    outfile = "saved_pol1.csv" # Grid1 policy stored in saved_pol1.csv, Grid2 policy is stored in saved_8m4_pol1.csv
+    outfile_lambdas = "saved_lambdas1.csv" # Grid1 policy stored in saved_lambdas1.csv, Grid2 policy is stored in saved_8m4_lambdas1.csv
+    pdb.set_trace()
     policy_printer.save(outfile, policies)
+    np.savetxt(outfile_lambdas, lambdas, delimiter=',')
 
 if __name__ == "__main__":
     

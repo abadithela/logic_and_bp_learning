@@ -28,7 +28,7 @@ class ExtendedFrozenLake(FrozenLakeEnv):
 
         c = -r
         g1 = int(d and not r)
-        g2 = int(a == 0)
+        g2 = int(a == 0) # Constraining the number of left turns.
         g = [g1, g2]
         return (s, (c,g), d, {"prob" : p})
 
