@@ -1,4 +1,3 @@
-
 #### Setup Gym 
 from __future__ import absolute_import
 from frozen_lake2 import ExtendedFrozenLake
@@ -9,7 +8,7 @@ map_size = 8
 # env = gym.make('FrozenLake-no-slip-v0')
 max_time_spent_in_episode = 100
 # env = ExtendedFrozenLake(max_time_spent_in_episode, map_name = '{0}x{0}'.format(map_size), is_slippery= False)
-env = ExtendedFrozenLake(max_time_spent_in_episode, map_name = '{0}m2x{0}m2'.format(map_size), is_slippery= False)
+env = ExtendedFrozenLake(max_time_spent_in_episode, map_name = '{0}m4x{0}m4'.format(map_size), is_slippery= False)
 position_of_holes = np.arange(env.desc.shape[0]*env.desc.shape[1]).reshape(env.desc.shape)[np.nonzero(env.desc == 'H')]
 position_of_goals = np.arange(env.desc.shape[0]*env.desc.shape[1]).reshape(env.desc.shape)[np.nonzero(env.desc == 'G')]
 
@@ -22,7 +21,7 @@ max_Q_fitting_epochs = 30 #max number of epochs over which to converge to Q^\ast
 max_eval_fitting_epochs = 30 #max number of epochs over which to converge to Q^\pi. Off Policy Eval
 lambda_bound = 30. # l1 bound on lagrange multipliers
 epsilon = .01 #0.01 termination condition for two-player game
-deviation_from_old_policy_eps = .95 #With what probabaility to deviate from the old policy
+deviation_from_old_policy_eps = 0.95 #With what probabaility to deviate from the old policy
 # convergence_epsilon = 1e-6 # termination condition for model convergence
 action_space_dim = env.nA # action space dimension
 state_space_dim = env.nS # state space dimension
@@ -35,7 +34,7 @@ old_policy_name = 'pi_old_map_size_{0}_{1}.h5'.format(map_size, model_type)
 final_policy_name = 'final_policy_left_{0}_{1}.h5'.format(map_size, model_type)
 # final_policy_name = 'test_{0}_{1}.h5'.format(map_size, model_type)
 # constraints = [.1, 0]
-constraints = [0, .1] + [0.4]
+constraints = [0, .1] + [0.7]
 constraints_cared_about = [0, 1]
 starting_lambda = 'uniform'
 
@@ -49,8 +48,8 @@ num_frame_stack=1
 min_buffer_size_to_train=0
 frame_skip = 1
 pic_size = tuple()
-min_epsilon = .02
-initial_epsilon = .3
+min_epsilon = 0.02
+initial_epsilon = 0.3
 epsilon_decay_steps = 1000 #num_iterations
 min_buffer_size_to_train = 2000 # min_buffer
 

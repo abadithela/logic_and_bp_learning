@@ -101,7 +101,6 @@ def main(env_name, headless):
                             pic_size = pic_size,
                             models_path = os.path.join(model_dir,'weights.{epoch:02d}-{loss:.2f}.hdf5'),
                             )
-
     else:
         raise
     
@@ -310,7 +309,7 @@ def main(env_name, headless):
     
     iteration = 0
     while not problem.is_over(policies, lambdas, infinite_loop=infinite_loop, calculate_gap=calculate_gap, results_name=results_name, policy_improvement_name=policy_improvement_name):
-        print("inside while loop")
+        print("========== Starting iterations =================")
         iteration += 1
         K.clear_session()
         for i in range(1):
@@ -335,8 +334,11 @@ def main(env_name, headless):
             problem.update(pi_t, values, iteration) #Evaluate C(pi_t), G(pi_t) and save
 
     # Saving old policy:
-    outfile = "saved_mod_pol2.csv"
+    outfile = "saved_8m4_pol2.csv"  # Grid1 policy stored in saved_pol2.csv, Grid2 policy is stored in saved_pol1.csv
+    outfile_lambdas = "saved_8m4_lambdas2.csv" # Grid1 policy stored in saved_lambdas2.csv, Grid2 policy is stored in saved_8m4_lambdas2.csv
+    pdb.set_trace()
     policy_printer.save(outfile, policies)
+    np.savetxt(outfile_lambdas, lambdas, delimiter=',')
 
 if __name__ == "__main__":
     

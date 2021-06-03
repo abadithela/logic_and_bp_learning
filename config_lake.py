@@ -9,11 +9,9 @@ map_size = 8
 # env = gym.make('FrozenLake-no-slip-v0')
 max_time_spent_in_episode = 100
 # env = ExtendedFrozenLake(max_time_spent_in_episode, map_name = '{0}x{0}'.format(map_size), is_slippery= False)
-env = ExtendedFrozenLake(max_time_spent_in_episode, map_name = '{0}x{0}'.format(map_size), is_slippery= False)
+env = ExtendedFrozenLake(max_time_spent_in_episode, map_name = '{0}m4x{0}m4'.format(map_size), is_slippery= False)
 position_of_holes = np.arange(env.desc.shape[0]*env.desc.shape[1]).reshape(env.desc.shape)[np.nonzero(env.desc == 'H')]
 position_of_goals = np.arange(env.desc.shape[0]*env.desc.shape[1]).reshape(env.desc.shape)[np.nonzero(env.desc == 'G')]
-
-
 
 #### Hyperparam
 gamma = 0.9
@@ -34,7 +32,7 @@ model_type = 'mlp'
 old_policy_name = 'pi_old_map_size_{0}_{1}.h5'.format(map_size, model_type)
 final_policy_name = 'final_policy_right_{0}_{1}.h5'.format(map_size, model_type)
 # constraints = [.1, 0]
-constraints = [0, .1] + [0.4]
+constraints = [0, .1] + [0.7]
 constraints_cared_about = [0, 1]
 starting_lambda = 'uniform'
 
@@ -42,7 +40,7 @@ starting_lambda = 'uniform'
 num_iterations = 5000
 sample_every_N_transitions = 10
 batchsize = 1000
-copy_over_target_every_M_training_iterations = 100
+copy_over_target_every_M_training_iterations=100
 buffer_size = 10000
 num_frame_stack=1
 min_buffer_size_to_train=0

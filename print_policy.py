@@ -17,12 +17,11 @@ class PrintPolicy(object):
 				pi = [pi]
 
 			if len(pi) == 0: return
-	
 		
 			states = np.array(list(range(size))).reshape(1,-1).T
 			actions_for_each_pi = np.hstack([[np.eye(self.action_space_dim)[p.min_over_a(np.arange(size))[1]] for p in pi]])
 			policy = np.hstack([states, np.argmax(actions_for_each_pi.mean(0), 1).reshape(1,-1).T])
-			np.savetext(outfile, policy, delimiter=',')
+			np.savetxt(outfile, policy, delimiter=',')
 
 	def pprint(self, *args):
 		if len(args) == 1:
